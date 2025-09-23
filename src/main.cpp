@@ -10,11 +10,12 @@
 
 int main() {
     using namespace sf;
+
     Zombie::initDummyTexture();
 
     enum class State { PAUSED, LEVELING_UP, GAME_OVER, PLAYING };
 
-    State state = State::GAME_OVER;
+    auto state = State::GAME_OVER;
 
     Vector2f resolution;
     resolution.x = VideoMode::getDesktopMode().size.x;
@@ -25,7 +26,7 @@ int main() {
         "Zombie Arena",
         sf::State::Windowed
     );
-    View mainView(FloatRect({0.f, 0.f}, {resolution.x, resolution.y}));
+    View mainView(FloatRect({0.f, 0.f}, resolution));
     Clock clock;
     Time gameTimeTotal;
 
@@ -52,7 +53,7 @@ int main() {
 
 
     window.setMouseCursorVisible(false);
-    Sprite crosshair = Sprite(TextureHolder::GetTexture("graphics/crosshair.png"));
+    auto crosshair = Sprite(TextureHolder::GetTexture("graphics/crosshair.png"));
     crosshair.setOrigin({25, 25});
 
     Console::init();
@@ -103,7 +104,7 @@ int main() {
                         case Keyboard::Key::Num5:
                         case Keyboard::Key::Num6:
                             state = State::PLAYING;
-                            arena = IntRect({0, 0}, {500, 500});
+                            arena = IntRect({0, 0}, {2000, 2000});
                             {
                                 int tileSize = createBackground(background, arena);
                                 player.spawn(arena, resolution, tileSize);
@@ -120,7 +121,6 @@ int main() {
                 }
             }
         }
-
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
             window.close();
         }
@@ -133,7 +133,7 @@ int main() {
 
             if (Mouse::isButtonPressed(Mouse::Button::Left)) {
                 if (gameTimeTotal.asMilliseconds() - lastPressed.asMilliseconds() > 1000 / fireRate && bulletsInClip > 0) {
-                    bullets[currentBullet].shoot(player.getCenter().x, player.getCenter().y, mouseWorldPosition.x, mouseWorldPosition.y);
+                    bullets[currentBullet].shoot(player.getCenter(), mouseWorldPosition);
                     currentBullet++;
                     if (currentBullet > 99) currentBullet = 0;
                     lastPressed = gameTimeTotal;
@@ -181,6 +181,7 @@ int main() {
                     window.draw(bullet.getShape());
                 }
             }
+
             window.draw(player.getSprite());
             window.draw(crosshair);
         }

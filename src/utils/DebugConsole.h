@@ -18,10 +18,10 @@ public:
     bool visible() const { return m_visible; }
 
     void log(std::string_view msg, Level level = Level::Log);
-    void info(std::string_view msg) { log(msg, Level::Info); }
-    void warn(std::string_view msg) { log(msg, Level::Warn); }
-    void error(std::string_view msg) { log(msg, Level::Error); }
-    void success(std::string_view msg) { log(msg, Level::Success); }
+    void info(const std::string_view msg) { log(msg, Level::Info); }
+    void warn(const std::string_view msg) { log(msg, Level::Warn); }
+    void error(const std::string_view msg) { log(msg, Level::Error); }
+    void success(const std::string_view msg) { log(msg, Level::Success); }
     void clear();
 
     bool handleEvent(const sf::Event& e);

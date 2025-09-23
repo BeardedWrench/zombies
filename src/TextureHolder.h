@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <mutex>
-
+using namespace sf;
 class TextureHolder {
 public:
     static TextureHolder& instance() {
@@ -12,9 +12,9 @@ public:
         return *inst;
     }
 
-    const sf::Texture& get(const std::string& relPath);
+    const Texture& get(const std::string& relPath);
 
-    static const sf::Texture& GetTexture(const std::string& relPath) {
+    static const Texture& GetTexture(const std::string& relPath) {
         return instance().get(relPath);
     }
 
@@ -23,6 +23,6 @@ private:
     TextureHolder(const TextureHolder&) = delete;
     TextureHolder& operator=(const TextureHolder&) = delete;
 
-    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> m_cache;
+    std::unordered_map<std::string, std::unique_ptr<Texture>> m_cache;
     std::mutex m_mutex;
 };

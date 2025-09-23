@@ -32,9 +32,9 @@ class Zombie {
         bool hit();
 
         bool isAlive() const;
-        void spawn(float startX, float startY, int type, int seed);
+        void spawn(Vector2f start, int type, int seed);
 
-        FloatRect getPosition();
+        FloatRect getPosition() const;
         const Sprite& getSprite() const { return m_Sprite; }
         void update(float elapsedTime, Vector2f playerLocation);
 };

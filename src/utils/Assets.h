@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <iostream>
 
+using namespace sf;
 inline std::string assetPath(const std::string& rel) {
 #ifdef RESOURCE_DIR
     return std::string(RESOURCE_DIR) + "/" + rel;
@@ -16,7 +17,7 @@ inline std::string assetPath(const std::string& rel) {
 #endif
 }
 
-inline void loadAsset(sf::Texture& tex, const std::string& relPath) {
+inline void loadAsset(Texture& tex, const std::string& relPath) {
     const auto full = assetPath(relPath);
     if (!tex.loadFromFile(full)) {
         std::cerr << "Failed to load texture: " << full << "\n";
@@ -24,7 +25,7 @@ inline void loadAsset(sf::Texture& tex, const std::string& relPath) {
     }
 }
 
-inline void loadAsset(sf::SoundBuffer& buf, const std::string& relPath) {
+inline void loadAsset(SoundBuffer& buf, const std::string& relPath) {
     const auto full = assetPath(relPath);
     if (!buf.loadFromFile(full)) {
         std::cerr << "Failed to load sound: " << full << "\n";
@@ -32,7 +33,7 @@ inline void loadAsset(sf::SoundBuffer& buf, const std::string& relPath) {
     }
 }
 
-inline void loadAsset(sf::Font& font, const std::string& relPath) {
+inline void loadAsset(Font& font, const std::string& relPath) {
     const auto full = assetPath(relPath);
     if (!font.openFromFile(full)) {
         std::cerr << "Failed to load font: " << full << "\n";
@@ -40,7 +41,7 @@ inline void loadAsset(sf::Font& font, const std::string& relPath) {
     }
 }
 
-inline void loadAsset(sf::Shader& shader,
+inline void loadAsset(Shader& shader,
                       const std::string& vertRel,
                       const std::string& fragRel) {
     const auto v = vertRel.empty() ? std::string{} : assetPath(vertRel);
@@ -50,9 +51,9 @@ inline void loadAsset(sf::Shader& shader,
     if (!v.empty() && !f.empty()) {
         ok = shader.loadFromFile(v, f);
     } else if (!v.empty()) {
-        ok = shader.loadFromFile(v, sf::Shader::Type::Vertex);
+        ok = shader.loadFromFile(v, Shader::Type::Vertex);
     } else if (!f.empty()) {
-        ok = shader.loadFromFile(f, sf::Shader::Type::Fragment);
+        ok = shader.loadFromFile(f, Shader::Type::Fragment);
     }
 
     if (!ok) {
@@ -62,7 +63,7 @@ inline void loadAsset(sf::Shader& shader,
     }
 }
 
-inline bool tryLoad(sf::Texture& tex, const std::string& relPath) {
+inline bool tryLoad(Texture& tex, const std::string& relPath) {
     const auto full = assetPath(relPath);
     if (!tex.loadFromFile(full)) {
         std::cerr << "tryLoad(texture) failed: " << full << "\n";
@@ -70,7 +71,7 @@ inline bool tryLoad(sf::Texture& tex, const std::string& relPath) {
     }
     return true;
 }
-inline bool tryLoad(sf::SoundBuffer& buf, const std::string& relPath) {
+inline bool tryLoad(SoundBuffer& buf, const std::string& relPath) {
     const auto full = assetPath(relPath);
     if (!buf.loadFromFile(full)) {
         std::cerr << "tryLoad(sound) failed: " << full << "\n";
@@ -78,7 +79,7 @@ inline bool tryLoad(sf::SoundBuffer& buf, const std::string& relPath) {
     }
     return true;
 }
-inline bool tryLoad(sf::Font& font, const std::string& relPath) {
+inline bool tryLoad(Font& font, const std::string& relPath) {
     const auto full = assetPath(relPath);
     if (!font.openFromFile(full)) {
         std::cerr << "tryLoad(font) failed: " << full << "\n";

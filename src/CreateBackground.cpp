@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 
-int createBackground(sf::VertexArray& rVA, sf::IntRect arena) {
+int createBackground(VertexArray& rVA, const IntRect arena) {
     constexpr int TILE_SIZE     = 50;
     constexpr int TILE_TYPES    = 3;   // number of non-border tile variants
     constexpr int VERTS_PER_TILE = 6;  // two triangles
@@ -12,16 +12,16 @@ int createBackground(sf::VertexArray& rVA, sf::IntRect arena) {
 
     // Build triangles instead of quads
     rVA.clear();
-    rVA.setPrimitiveType(sf::PrimitiveType::Triangles);
+    rVA.setPrimitiveType(PrimitiveType::Triangles);
     rVA.resize(static_cast<std::size_t>(worldWidth) * worldHeight * VERTS_PER_TILE);
 
     // RNG once (don’t re-seed per tile)
     static std::mt19937 rng{std::random_device{}()};
-    std::uniform_int_distribution<int> dist(0, TILE_TYPES - 1);
+    std::uniform_int_distribution dist(0, TILE_TYPES - 1);
 
     // Offset if arena doesn’t start at (0,0)
-    const float baseX = static_cast<float>(arena.position.x);
-    const float baseY = static_cast<float>(arena.position.y);
+    const auto baseX = static_cast<float>(arena.position.x);
+    const auto baseY = static_cast<float>(arena.position.y);
 
     std::size_t currentVertex = 0;
     for (int w = 0; w < worldWidth; ++w) {
@@ -41,10 +41,10 @@ int createBackground(sf::VertexArray& rVA, sf::IntRect arena) {
                 verticalOffset = dist(rng) * TILE_SIZE; // random inner variant
             }
 
-            const sf::Vector2f tlTex(0.f,                 static_cast<float>(verticalOffset));
-            const sf::Vector2f trTex(static_cast<float>(TILE_SIZE), static_cast<float>(verticalOffset));
-            const sf::Vector2f brTex(static_cast<float>(TILE_SIZE), static_cast<float>(verticalOffset + TILE_SIZE));
-            const sf::Vector2f blTex(0.f,                 static_cast<float>(verticalOffset + TILE_SIZE));
+            const Vector2f tlTex(0.f,                 static_cast<float>(verticalOffset));
+            const Vector2f trTex(static_cast<float>(TILE_SIZE), static_cast<float>(verticalOffset));
+            const Vector2f brTex(static_cast<float>(TILE_SIZE), static_cast<float>(verticalOffset + TILE_SIZE));
+            const Vector2f blTex(0.f,                 static_cast<float>(verticalOffset + TILE_SIZE));
 
             // Two triangles per tile: (TL, TR, BR) and (TL, BR, BL)
             // Positions

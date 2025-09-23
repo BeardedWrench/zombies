@@ -1,10 +1,10 @@
 #include "Zombie.h"
 #include "TextureHolder.h"
-#include <cstdint>
+
 using namespace std;
 Texture Zombie::s_dummyTexture;
 
-void Zombie::spawn(float startX, float startY, int type, int seed) {
+void Zombie::spawn(const Vector2f start, const int type, const int seed) {
     switch (type) {
         case 0:
             // Bloater
@@ -24,16 +24,17 @@ void Zombie::spawn(float startX, float startY, int type, int seed) {
             m_Speed = CRAWLER_SPEED;
             m_Health = CRAWLER_HEALTH;
             break;
+        default: ;
     }
 
-    srand((int)time(0) * seed);
+    srand(static_cast<int>(time(nullptr)) * seed);
 
     float modifier = (rand() % MAX_VARRIANCE) + OFFSET;
     modifier /= 100;
     m_Speed *= modifier;
     m_Alive = true;
 
-    m_Position = {startX, startY};
+    m_Position = start;
     m_Sprite.setOrigin(Vector2f{25.f, 25.f});
     m_Sprite.setPosition(m_Position);
 }
@@ -52,28 +53,28 @@ bool Zombie::isAlive() const {
     return m_Alive;
 }
 
-FloatRect Zombie::getPosition() {
+FloatRect Zombie::getPosition() const {
     return m_Sprite.getGlobalBounds();
 }
 
-void Zombie::update(float elaspedTime, Vector2f playerLocation) {
-    float playerX = playerLocation.x;
-    float playerY = playerLocation.y;
+void Zombie::update(const float elapsedTime, const Vector2f playerLocation) {
+    const float playerX = playerLocation.x;
+    const float playerY = playerLocation.y;
 
-    if (playerX > m_Position.x) m_Position.x += m_Speed * elaspedTime;
-    if (playerY > m_Position.y) m_Position.y += m_Speed * elaspedTime;
-    if (playerX < m_Position.x) m_Position.x -= m_Speed * elaspedTime;
-    if (playerY < m_Position.y) m_Position.y -= m_Speed * elaspedTime;
+    if (playerX > m_Position.x) m_Position.x += m_Speed * elapsedTime;
+    if (playerY > m_Position.y) m_Position.y += m_Speed * elapsedTime;
+    if (playerX < m_Position.x) m_Position.x -= m_Speed * elapsedTime;
+    if (playerY < m_Position.y) m_Position.y -= m_Speed * elapsedTime;
 
 
     m_Sprite.setPosition(m_Position);
 
     constexpr float PI = 3.141f;
-    float angleDeg = std::atan2f(
+    const float angleDeg = std::atan2f(
         playerY - m_Position.y,
         playerX - m_Position.x
     ) * 180.f / PI;
-    m_Sprite.setRotation(sf::degrees(angleDeg));
+    m_Sprite.setRotation(degrees(angleDeg));
 }
 bool Zombie::initDummyTexture() {
     const Image img({1u, 1u}, Color(0, 0, 0, 0));

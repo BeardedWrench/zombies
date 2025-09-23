@@ -9,16 +9,13 @@
 #include "utils/Console.h"
 
 Player::Player()
-    : m_Texture()
-    , m_Sprite(m_Texture)
+    : m_Sprite(m_Texture)
 {
     m_Sprite = Sprite(TextureHolder::GetTexture("graphics/player.png"));
-
-
     m_Sprite.setOrigin(Vector2f{25.f, 25.f});
 }
 
-void Player::spawn(const IntRect& arena, const Vector2f& resolution, int tileSize) {
+void Player::spawn(const IntRect& arena, const Vector2f& resolution, const int tileSize) {
     m_Position.x = static_cast<float>(arena.position.x) + static_cast<float>(arena.size.x) / 2.f;
     m_Position.y = static_cast<float>(arena.position.y) + static_cast<float>(arena.size.y) / 2.f;
 
@@ -42,7 +39,7 @@ void Player::resetPlayerStats() {
 
 Time Player::getLastHitTime() const { return m_LastHit; }
 
-bool Player::hit(sf::Time timeHit) {
+bool Player::hit(const Time timeHit) {
     if (timeHit.asMilliseconds() - m_LastHit.asMilliseconds() > 200) {
         m_LastHit = timeHit;
         m_Health -= 10;
@@ -51,41 +48,41 @@ bool Player::hit(sf::Time timeHit) {
     return false;
 }
 
-FloatRect        Player::getPosition() const { return m_Sprite.getGlobalBounds(); }
-Vector2f         Player::getCenter()   const { return m_Position; }
-float                Player::getRotation() const { return m_Sprite.getRotation().asDegrees(); }
-const sf::Sprite&    Player::getSprite()   const { return m_Sprite; }
-int                  Player::getHealth()   const { return m_Health; }
+FloatRect Player::getPosition() const { return m_Sprite.getGlobalBounds(); }
+Vector2f Player::getCenter()   const { return m_Position; }
+float Player::getRotation() const { return m_Sprite.getRotation().asDegrees(); }
+const Sprite& Player::getSprite()   const { return m_Sprite; }
+int Player::getHealth()   const { return m_Health; }
 
-void Player::moveLeft()  { m_LeftPressed  = true; }
+void Player::moveLeft() { m_LeftPressed = true; }
 void Player::moveRight() { m_RightPressed = true; }
-void Player::moveUp()    { m_UpPressed    = true; }
-void Player::moveDown()  { m_DownPressed  = true; }
-void Player::stopLeft()  { m_LeftPressed  = false; }
+void Player::moveUp() { m_UpPressed = true; }
+void Player::moveDown() { m_DownPressed = true; }
+void Player::stopLeft() { m_LeftPressed = false; }
 void Player::stopRight() { m_RightPressed = false; }
-void Player::stopUp()    { m_UpPressed    = false; }
-void Player::stopDown()  { m_DownPressed  = false; }
+void Player::stopUp() { m_UpPressed = false; }
+void Player::stopDown() { m_DownPressed = false; }
 
-void Player::update(float elapsedTime, sf::Vector2i mousePosition) {
-    if (m_UpPressed)    m_Position.y -= m_Speed * elapsedTime;
-    if (m_DownPressed)  m_Position.y += m_Speed * elapsedTime;
+void Player::update(const float elapsedTime, const Vector2i mousePosition) {
+    if (m_UpPressed) m_Position.y -= m_Speed * elapsedTime;
+    if (m_DownPressed) m_Position.y += m_Speed * elapsedTime;
     if (m_RightPressed) m_Position.x += m_Speed * elapsedTime;
-    if (m_LeftPressed)  m_Position.x -= m_Speed * elapsedTime;
+    if (m_LeftPressed) m_Position.x -= m_Speed * elapsedTime;
 
-    const float leftBound   = static_cast<float>(m_Arena.position.x + m_TileSize);
-    const float rightBound  = static_cast<float>(m_Arena.position.x + m_Arena.size.x - m_TileSize);
-    const float topBound    = static_cast<float>(m_Arena.position.y + m_TileSize);
-    const float bottomBound = static_cast<float>(m_Arena.position.y + m_Arena.size.y - m_TileSize);
+    const auto leftBound = static_cast<float>(m_Arena.position.x + m_TileSize);
+    const auto rightBound = static_cast<float>(m_Arena.position.x + m_Arena.size.x - m_TileSize);
+    const auto topBound = static_cast<float>(m_Arena.position.y + m_TileSize);
+    const auto bottomBound = static_cast<float>(m_Arena.position.y + m_Arena.size.y - m_TileSize);
 
-    if (m_Position.x > rightBound)  m_Position.x = rightBound;
-    if (m_Position.x < leftBound)   m_Position.x = leftBound;
+    if (m_Position.x > rightBound) m_Position.x = rightBound;
+    if (m_Position.x < leftBound) m_Position.x = leftBound;
     if (m_Position.y > bottomBound) m_Position.y = bottomBound;
-    if (m_Position.y < topBound)    m_Position.y = topBound;
+    if (m_Position.y < topBound) m_Position.y = topBound;
 
     m_Sprite.setPosition(m_Position);
 
     constexpr float PI = 3.141f;
-    float angleDeg = std::atan2f(
+    const float angleDeg = std::atan2f(
         static_cast<float>(mousePosition.y) - m_Resolution.y / 2.f,
         static_cast<float>(mousePosition.x) - m_Resolution.x / 2.f
     ) * 180.f / PI;
@@ -93,9 +90,9 @@ void Player::update(float elapsedTime, sf::Vector2i mousePosition) {
     m_Sprite.setRotation(degrees(angleDeg));
 }
 
-void Player::upgradeSpeed()       { m_Speed     += (START_SPEED * 0.2f); }
-void Player::upgradeHealth()      { m_MaxHealth += (START_HEALTH * 0.2f); }
-void Player::increaseHealthLevel(int amount) {
+void Player::upgradeSpeed() { m_Speed += START_SPEED * 0.2f; }
+void Player::upgradeHealth() { m_MaxHealth += START_HEALTH * 0.2f; }
+void Player::increaseHealthLevel(const int amount) {
     m_Health += amount;
     if (m_Health > m_MaxHealth) m_Health = m_MaxHealth;
 }
